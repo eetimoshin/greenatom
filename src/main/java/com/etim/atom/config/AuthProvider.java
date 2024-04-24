@@ -1,5 +1,6 @@
-package com.etim.atom.security;
+package com.etim.atom.config;
 
+import com.etim.atom.security.MyUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,10 +26,10 @@ public class AuthProvider implements AuthenticationProvider {
         UserDetails personDetails = userDetailsService.loadUserByUsername(username);
 
         //отключаем шифрование для заполнения бд из скрипта
-//        if (!passwordEncoder.matches(password, personDetails.getPassword()))
-//            throw new BadCredentialsException("Incorrect password");
-        if (!password.equals(personDetails.getPassword()))
+        if (!passwordEncoder.matches(password, personDetails.getPassword()))
             throw new BadCredentialsException("Incorrect password");
+//        if (!password.equals(personDetails.getPassword()))
+//            throw new BadCredentialsException("Incorrect password");
 
         return new UsernamePasswordAuthenticationToken(personDetails, password, authentication.getAuthorities());
     }

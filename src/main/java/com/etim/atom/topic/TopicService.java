@@ -2,18 +2,16 @@ package com.etim.atom.topic;
 
 import com.etim.atom.message.Message;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -22,6 +20,11 @@ public class TopicService {
     private final TopicRepository topicRepository;
 
     public Topic save(Topic topic, Message message) {
+        validateTopic(topic);
+        if (message.getText().isEmpty() || message.getText().length() > 100) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Text of message is invalid");
+        }
         topic.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
         topic.addToMessages(message);
         return topicRepository.save(topic);
@@ -41,43 +44,34 @@ public class TopicService {
         return newTopics;
     }
 
-    public Optional<Topic> findByUuid(String id) {
-        return topicRepository.findByTopicUuid(id);
+    public Topic findByUuid(String id) {
+        return topicRepository.findByTopicUuid(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found"));
     }
 
-    public ResponseEntity<?> getTopic(String id) {
-        if (topicRepository.findByTopicUuid(id).isEmpty()) {
-            return ResponseEntity.status(400).body("Invalid topic ID");
-        }
-        else return ResponseEntity.status(200).body(topicRepository.findByTopicUuid(id));
-    }
+    public Topic update(String id, Topic topic) {
+        Topic newTopic = findByUuid(id);
 
-    public Optional<Topic> findByName(String name) {
-        return topicRepository.findByTopicName(name);
-    }
-
-    public ResponseEntity<?> update(String id, Topic topic) {
-        Topic newTopic = topicRepository.findByTopicUuid(id).orElse(null);
-        if (newTopic == null) {
-            return ResponseEntity.status(400).body("Invalid ID supplied");
-        }
+        validateTopic(topic);
 
         newTopic.setTopicName(topic.getTopicName());
-        return ResponseEntity.status(200).body(topicRepository.save(newTopic));
+        return topicRepository.save(newTopic);
     }
 
-    public ResponseEntity<?> delete(String id) {
-        if (topicRepository.findByTopicUuid(id).isEmpty()) {
-            return ResponseEntity.status(400).body("Invalid ID supplied");
-        }
+    public void delete(String id) {
         UserDetails personDetails = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
         boolean isAdmin = personDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
+
         if (isAdmin)
             topicRepository.deleteById(id);
+    }
 
-        return ResponseEntity.status(204).build();
+    private void validateTopic(Topic topic) {
+        if (topic.getTopicName().isEmpty() || topic.getTopicName().length() > 20){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic invalid");
+        }
     }
 }

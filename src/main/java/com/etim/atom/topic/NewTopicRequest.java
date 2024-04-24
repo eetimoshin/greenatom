@@ -1,4 +1,4 @@
-package com.etim.atom;
+package com.etim.atom.topic;
 
 import com.etim.atom.message.Message;
 import com.etim.atom.topic.Topic;

@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Builder
 @Data
+@ToString
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

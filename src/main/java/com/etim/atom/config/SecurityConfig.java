@@ -1,4 +1,4 @@
-package com.etim.atom.security;
+package com.etim.atom.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
+//        return NoOpPasswordEncoder.getInstance(); //отключаем шифрование для заполнения бд из скрипта
     }
 }
