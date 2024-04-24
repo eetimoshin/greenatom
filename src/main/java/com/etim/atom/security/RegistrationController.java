@@ -1,5 +1,6 @@
 package com.etim.atom.security;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ public class RegistrationController {
 
     private final MyUserDetailsService userDetailsService;
 
+    @Operation(summary = "Register a user")
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody MyUser user) {
         return userDetailsService.save(user);
