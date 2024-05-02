@@ -1,5 +1,6 @@
-package com.etim.atom.topic;
+package com.etim.atom.repositories;
 
+import com.etim.atom.models.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

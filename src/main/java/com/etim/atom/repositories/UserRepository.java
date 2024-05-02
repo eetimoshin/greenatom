@@ -1,4 +1,4 @@
-package com.etim.atom.security;
+package com.etim.atom.repositories;
 
 import com.etim.atom.security.MyUser;
 import org.springframework.data.jpa.repository.JpaRepository;

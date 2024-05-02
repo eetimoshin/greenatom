@@ -1,9 +1,11 @@
-package com.etim.atom.message;
+package com.etim.atom.models;
 
-import com.etim.atom.topic.Topic;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor

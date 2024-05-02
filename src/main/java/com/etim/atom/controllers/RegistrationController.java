@@ -1,5 +1,7 @@
-package com.etim.atom.security;
+package com.etim.atom.controllers;
 
+import com.etim.atom.security.MyUser;
+import com.etim.atom.services.MyUserDetailsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

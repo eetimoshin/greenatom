@@ -1,9 +1,5 @@
-package com.etim.atom.topic;
+package com.etim.atom.models;
 
-import com.etim.atom.message.Message;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 

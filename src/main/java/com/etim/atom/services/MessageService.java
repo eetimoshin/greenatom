@@ -1,7 +1,10 @@
-package com.etim.atom.message;
+package com.etim.atom.services;
 
-import com.etim.atom.topic.Topic;
-import com.etim.atom.topic.TopicRepository;
+import com.etim.atom.models.Message;
+import com.etim.atom.repositories.MessageRepository;
+import com.etim.atom.requests.MessageRequest;
+import com.etim.atom.models.Topic;
+import com.etim.atom.repositories.TopicRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,20 +22,22 @@ public class MessageService {
 
     private final TopicRepository topicRepository;
 
-    public Message save(Message message, String topicId) {
-        validateMessage(message);
+    public Message save(MessageRequest messageRequest, String topicId) {
+        validateMessageRequest(messageRequest);
+        Message message = new Message();
+        message.setText(messageRequest.text());
         message.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
         message.setTopic(topicRepository.findByTopicUuid(topicId).orElse(null));
         message.setAuthor(getCurrentUsername());
         return messageRepository.save(message);
     }
 
-    public Topic update(String messageIdToUpdate, Message updatedMessage) {
+    public Topic update(String messageIdToUpdate, MessageRequest updatedMessageRequest) {
         Message messageToUpdate = findByUuid(messageIdToUpdate);
-        validateMessage(updatedMessage);
+        validateMessageRequest(updatedMessageRequest);
 
         if (getCurrentUsername().equals(messageToUpdate.getAuthor()) || ifAdmin()) {
-            messageToUpdate.setText(updatedMessage.getText());
+            messageToUpdate.setText(updatedMessageRequest.text());
             messageRepository.save(messageToUpdate);
         }
 
@@ -60,8 +65,8 @@ public class MessageService {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
     }
 
-    private void validateMessage(Message message) {
-        if (message.getText().isEmpty() || message.getText().length() > 100) {
+    private void validateMessageRequest(MessageRequest messageRequest) {
+        if (messageRequest.text().isEmpty() || messageRequest.text().length() > 100) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Text of message is invalid");
         }
