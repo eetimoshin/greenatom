@@ -1,6 +1,6 @@
 package com.etim.atom.config;
 
-import com.etim.atom.security.MyUserDetailsService;
+import com.etim.atom.services.MyUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

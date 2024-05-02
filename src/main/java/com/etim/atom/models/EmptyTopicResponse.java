@@ -1,4 +1,4 @@
-package com.etim.atom.topic;
+package com.etim.atom.models;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Data
-public class TopicDTO {
+public class EmptyTopicResponse {
     private String topicId;
     private String topicName;
     private String createdAt;

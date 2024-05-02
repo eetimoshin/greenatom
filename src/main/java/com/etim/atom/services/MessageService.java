@@ -1,8 +1,10 @@
-package com.etim.atom.message;
+package com.etim.atom.services;
 
+import com.etim.atom.models.Message;
+import com.etim.atom.repositories.MessageRepository;
 import com.etim.atom.requests.MessageRequest;
-import com.etim.atom.topic.Topic;
-import com.etim.atom.topic.TopicRepository;
+import com.etim.atom.models.Topic;
+import com.etim.atom.repositories.TopicRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;

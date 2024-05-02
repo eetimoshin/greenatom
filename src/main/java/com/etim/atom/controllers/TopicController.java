@@ -1,8 +1,12 @@
-package com.etim.atom.topic;
+package com.etim.atom.controllers;
 
-import com.etim.atom.message.MessageService;
+import com.etim.atom.services.MessageService;
 import com.etim.atom.requests.MessageRequest;
-import com.etim.atom.requests.TopicRequest;
+import com.etim.atom.requests.EmptyTopicRequest;
+import com.etim.atom.requests.TopicWithMessageRequest;
+import com.etim.atom.models.Topic;
+import com.etim.atom.models.EmptyTopicResponse;
+import com.etim.atom.services.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +24,16 @@ public class TopicController {
 
     @Operation(summary = "Get all topics")
     @GetMapping("/topic")
-    public List<TopicDTO> listAllTopics() {
+    public List<EmptyTopicResponse> listAllTopics() {
         return topicService.show();
     }
 
     @Operation(summary = "Create topic")
     @PostMapping("/topic")
-    public Topic createTopic(@RequestBody NewTopicRequest newTopicRequest) {
-        TopicRequest topicRequest = newTopicRequest.getTopicRequest();
-        MessageRequest messageRequest = newTopicRequest.getMessageRequest();
-        topicService.save(topicRequest, messageRequest);
+    public Topic createTopic(@RequestBody TopicWithMessageRequest topicWithMessageRequest) {
+        EmptyTopicRequest emptyTopicRequest = topicWithMessageRequest.getEmptyTopicRequest();
+        MessageRequest messageRequest = topicWithMessageRequest.getMessageRequest();
+        Topic topic = topicService.save(emptyTopicRequest, messageRequest);
         messageService.save(messageRequest, topic.getTopicUuid());
         return topic;
     }
@@ -51,8 +55,8 @@ public class TopicController {
     @Operation(summary = "Update topic")
     @PutMapping("/topic/{topicId}")
     public Topic updateTopic(@PathVariable("topicId") String topicId,
-                             @RequestBody Topic topic) {
-        return topicService.update(topicId, topic);
+                             @RequestBody EmptyTopicRequest emptyTopicRequest) {
+        return topicService.update(topicId, emptyTopicRequest);
     }
 
     @Operation(summary = "Delete topic")

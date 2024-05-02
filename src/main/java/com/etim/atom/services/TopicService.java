@@ -1,8 +1,11 @@
-package com.etim.atom.topic;
+package com.etim.atom.services;
 
-import com.etim.atom.message.Message;
+import com.etim.atom.models.Message;
 import com.etim.atom.requests.MessageRequest;
-import com.etim.atom.requests.TopicRequest;
+import com.etim.atom.requests.EmptyTopicRequest;
+import com.etim.atom.models.Topic;
+import com.etim.atom.models.EmptyTopicResponse;
+import com.etim.atom.repositories.TopicRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +24,8 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-    public Topic save(TopicRequest topicRequest, MessageRequest messageRequest) {
-        validateTopicRequest(topicRequest);
+    public Topic save(EmptyTopicRequest emptyTopicRequest, MessageRequest messageRequest) {
+        validateTopicRequest(emptyTopicRequest);
         if (messageRequest.text().isEmpty() || messageRequest.text().length() > 100) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Text of message is invalid");
@@ -30,17 +33,17 @@ public class TopicService {
         Message message = new Message();
         message.setText(messageRequest.text());
         Topic topic = new Topic();
-        topic.setTopicName(topicRequest.topicName());
+        topic.setTopicName(emptyTopicRequest.topicName());
         topic.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
         topic.addToMessages(message);
         return topicRepository.save(topic);
     }
 
-    public List<TopicDTO> show() {
+    public List<EmptyTopicResponse> show() {
         List<Topic> topics = topicRepository.findAll();
-        List<TopicDTO> newTopics = new ArrayList<>();
+        List<EmptyTopicResponse> newTopics = new ArrayList<>();
         for (Topic topic : topics) {
-            TopicDTO newTopic = TopicDTO.builder()
+            EmptyTopicResponse newTopic = EmptyTopicResponse.builder()
                     .topicId(topic.getTopicUuid())
                     .topicName(topic.getTopicName())
                     .createdAt(topic.getCreatedAt())
@@ -55,11 +58,12 @@ public class TopicService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found"));
     }
 
-    public Topic update(String id, Topic topic) {
+    public Topic update(String id, EmptyTopicRequest emptyTopicRequest) {
         Topic newTopic = findByUuid(id);
 
-        validateTopic(topic);
-
+        validateTopicRequest(emptyTopicRequest);
+        Topic topic = new Topic();
+        topic.setTopicName(emptyTopicRequest.topicName());
         newTopic.setTopicName(topic.getTopicName());
         return topicRepository.save(newTopic);
     }
@@ -75,8 +79,8 @@ public class TopicService {
             topicRepository.deleteById(id);
     }
 
-    private void validateTopicRequest(TopicRequest topicRequest) {
-        if (topicRequest.topicName().isEmpty() || topicRequest.topicName().length() > 20){
+    private void validateTopicRequest(EmptyTopicRequest emptyTopicRequest) {
+        if (emptyTopicRequest.topicName().isEmpty() || emptyTopicRequest.topicName().length() > 20){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic invalid");
         }
     }

@@ -1,5 +1,8 @@
-package com.etim.atom.security;
+package com.etim.atom.services;
 
+import com.etim.atom.security.MyUser;
+import com.etim.atom.security.MyUserDetails;
+import com.etim.atom.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
