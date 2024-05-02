@@ -1,6 +1,8 @@
 package com.etim.atom.topic;
 
 import com.etim.atom.message.Message;
+import com.etim.atom.requests.MessageRequest;
+import com.etim.atom.requests.TopicRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,12 +21,16 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-    public Topic save(Topic topic, Message message) {
-        validateTopic(topic);
-        if (message.getText().isEmpty() || message.getText().length() > 100) {
+    public Topic save(TopicRequest topicRequest, MessageRequest messageRequest) {
+        validateTopicRequest(topicRequest);
+        if (messageRequest.text().isEmpty() || messageRequest.text().length() > 100) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Text of message is invalid");
         }
+        Message message = new Message();
+        message.setText(messageRequest.text());
+        Topic topic = new Topic();
+        topic.setTopicName(topicRequest.topicName());
         topic.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
         topic.addToMessages(message);
         return topicRepository.save(topic);
@@ -69,8 +75,8 @@ public class TopicService {
             topicRepository.deleteById(id);
     }
 
-    private void validateTopic(Topic topic) {
-        if (topic.getTopicName().isEmpty() || topic.getTopicName().length() > 20){
+    private void validateTopicRequest(TopicRequest topicRequest) {
+        if (topicRequest.topicName().isEmpty() || topicRequest.topicName().length() > 20){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic invalid");
         }
     }

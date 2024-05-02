@@ -1,15 +1,13 @@
 package com.etim.atom.topic;
 
-import com.etim.atom.message.Message;
-import com.etim.atom.topic.Topic;
-import lombok.EqualsAndHashCode;
+import com.etim.atom.requests.MessageRequest;
+import com.etim.atom.requests.TopicRequest;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 public class NewTopicRequest {
-    private Topic topic;
-    private Message message;
+    private TopicRequest topicRequest;
+    private MessageRequest messageRequest;
 }

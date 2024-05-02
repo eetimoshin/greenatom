@@ -1,7 +1,8 @@
 package com.etim.atom.topic;
 
-import com.etim.atom.message.Message;
 import com.etim.atom.message.MessageService;
+import com.etim.atom.requests.MessageRequest;
+import com.etim.atom.requests.TopicRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +26,19 @@ public class TopicController {
 
     @Operation(summary = "Create topic")
     @PostMapping("/topic")
-    public Topic createTopic(@RequestBody NewTopicRequest request) {
-        Topic topic = request.getTopic();
-        Message message = request.getMessage();
-        topicService.save(topic, message);
-        messageService.save(message, topic.getTopicUuid());
+    public Topic createTopic(@RequestBody NewTopicRequest newTopicRequest) {
+        TopicRequest topicRequest = newTopicRequest.getTopicRequest();
+        MessageRequest messageRequest = newTopicRequest.getMessageRequest();
+        topicService.save(topicRequest, messageRequest);
+        messageService.save(messageRequest, topic.getTopicUuid());
         return topic;
     }
 
     @Operation(summary = "Create message in the topic")
     @PostMapping("/topic/{topicId}/message")
     public Topic createMessage(@PathVariable("topicId") String topicId,
-                               @RequestBody Message message) {
-        messageService.save(message, topicId);
+                               @RequestBody MessageRequest messageRequest) {
+        messageService.save(messageRequest, topicId);
         return topicService.findByUuid(topicId);
     }
 

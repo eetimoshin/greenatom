@@ -1,5 +1,6 @@
 package com.etim.atom.message;
 
+import com.etim.atom.requests.MessageRequest;
 import com.etim.atom.topic.Topic;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,8 @@ public class MessageController {
     @Operation(summary = "Update message")
     @PutMapping("/message/{messageId}")
     public Topic updateMessage(@PathVariable("messageId") String messageIdToUpdate,
-                               @RequestBody Message updatedMessage) {
-        return messageService.update(messageIdToUpdate, updatedMessage);
+                               @RequestBody MessageRequest updatedMessageRequest) {
+        return messageService.update(messageIdToUpdate, updatedMessageRequest);
     }
 
     @Operation(summary = "Delete message")
