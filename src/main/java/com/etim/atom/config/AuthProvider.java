@@ -26,10 +26,10 @@ public class AuthProvider implements AuthenticationProvider {
         UserDetails personDetails = userDetailsService.loadUserByUsername(username);
 
         //отключаем шифрование для заполнения бд из скрипта
-        if (!passwordEncoder.matches(password, personDetails.getPassword()))
-            throw new BadCredentialsException("Incorrect password");
-//        if (!password.equals(personDetails.getPassword()))
+//        if (!passwordEncoder.matches(password, personDetails.getPassword()))
 //            throw new BadCredentialsException("Incorrect password");
+        if (!password.equals(personDetails.getPassword()))
+            throw new BadCredentialsException("Incorrect password");
 
         return new UsernamePasswordAuthenticationToken(personDetails, password, authentication.getAuthorities());
     }

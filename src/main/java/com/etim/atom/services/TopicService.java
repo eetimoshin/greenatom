@@ -30,11 +30,13 @@ public class TopicService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Text of message is invalid");
         }
-        Message message = new Message();
-        message.setText(messageRequest.text());
         Topic topic = new Topic();
         topic.setTopicName(emptyTopicRequest.topicName());
         topic.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+        Message message = new Message();
+        message.setText(messageRequest.text());
+        message.setCreatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+        message.setAuthor(getCurrentUsername());
         topic.addToMessages(message);
         return topicRepository.save(topic);
     }
@@ -83,5 +85,11 @@ public class TopicService {
         if (emptyTopicRequest.topicName().isEmpty() || emptyTopicRequest.topicName().length() > 20){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic invalid");
         }
+    }
+
+    private String getCurrentUsername() {
+        UserDetails personDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return personDetails.getUsername();
     }
 }

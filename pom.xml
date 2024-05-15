@@ -15,6 +15,7 @@
 	<description>atom</description>
 	<properties>
 		<java.version>21</java.version>
+		<start-class>com.etim.atom.AtomApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
