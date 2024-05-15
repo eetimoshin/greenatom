@@ -32,6 +32,18 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
+    public Message update(MessageRequest updatedMessageRequest, String messageIdToUpdate) {
+        Message messageToUpdate = findByUuid(messageIdToUpdate);
+        validateMessageRequest(updatedMessageRequest);
+
+        if (getCurrentUsername().equals(messageToUpdate.getAuthor()) || ifAdmin()) {
+            messageToUpdate.setText(updatedMessageRequest.text());
+            return messageRepository.save(messageToUpdate);
+        }
+
+        return null;
+    }
+
     public Topic update(String messageIdToUpdate, MessageRequest updatedMessageRequest) {
         Message messageToUpdate = findByUuid(messageIdToUpdate);
         validateMessageRequest(updatedMessageRequest);
