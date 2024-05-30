@@ -20,7 +20,7 @@
 # Команды для запуска 
 - mvn spring-boot:run - запуск приложения
 - mvn test -Dgroups=unit - запуск юнит тестов
-- mvn test -Dgroups=it - запуск интеграционных теств
+- mvn test -Dgroups=it - запуск интеграционных тестов
 - docker-compose up -d - запуск приложения в docker
 
 # Документация для API доступна по ссылке 
